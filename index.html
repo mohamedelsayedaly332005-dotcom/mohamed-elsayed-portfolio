@@ -56,7 +56,7 @@
 <a href="#contact" class="btn-primary">Get In Touch</a>
       </div>
 
-      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+      <button type="button" class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
     </div>
@@ -124,21 +124,28 @@
           </div>
 
           <!-- Live Engineering Stats Counter -->
-          <div class="hero-stats">
-            <div class="stat-item">
-              <div class="stat-num" data-target="164170.14" data-decimals="2" data-suffix=" N">0<span> N</span></div>
+          <div class="hero-stats-header">
+            <span class="stats-kicker">Verified Telemetry &amp; Recognition</span>
+            <button type="button" class="stats-replay-btn" id="btn-replay-stats" aria-label="Replay counting numbers animation">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+              Replay Counters
+            </button>
+          </div>
+          <div class="hero-stats" id="hero-stats">
+            <div class="stat-item" tabindex="0" role="button" aria-label="Rocket Thrust Output: 164,170.14 Newtons. Tap to replay counter.">
+              <div class="stat-num" data-target="164170.14" data-decimals="2" data-suffix=" N">0.00<span> N</span></div>
               <div class="stat-label">Rocket Thrust Output</div>
             </div>
-            <div class="stat-item">
-              <div class="stat-num" data-target="3807" data-suffix=" K">0<span> K</span></div>
+            <div class="stat-item" tabindex="0" role="button" aria-label="Peak Combustion Temp: 3,807 Kelvin. Tap to replay counter.">
+              <div class="stat-num" data-target="3807" data-decimals="0" data-suffix=" K">0<span> K</span></div>
               <div class="stat-label">Peak Combustion Temp</div>
             </div>
-            <div class="stat-item">
-              <div class="stat-num" data-target="1" data-prefix="#" data-suffix=" Place">#0<span> Place</span></div>
+            <div class="stat-item" tabindex="0" role="button" aria-label="1st Place Award Flowmeter Competition. Tap to replay counter.">
+              <div class="stat-num" data-target="1" data-decimals="0" data-prefix="#" data-suffix=" Place">#0<span> Place</span></div>
               <div class="stat-label">1st Place Award · Flowmeter</div>
             </div>
-            <div class="stat-item">
-              <div class="stat-num" style="color: #ffffff; font-size: 1.55rem; font-weight: 800;">Best Mfg</div>
+            <div class="stat-item" tabindex="0" role="button" aria-label="Best Manufacturing Award Flowmeter Competition: 100% ASME and ISO manufacturing compliance.">
+              <div class="stat-num" data-target="100" data-decimals="0" data-suffix="% Mfg">0<span>% Mfg</span></div>
               <div class="stat-label">Best Manufacturing Award · Flowmeter</div>
             </div>
           </div>
@@ -337,7 +344,7 @@
           <div id="three-loading-overlay" class="three-loader">
             <div class="loader-spinner"></div>
             <div class="loader-text">Loading Jahhar-0.2 RPA Assembly (OBJ)...</div>
-            <div class="loader-sub">Cast Aluminum PBR Simulation · 533k Polygons</div>
+            <div class="loader-sub">Multi-Alloy Studio PBR · Crease-Smoothed CAD Assembly</div>
           </div>
 
           <div class="model-controls-hud">
@@ -346,10 +353,13 @@
               <span>Jahhar-0.2 RPA OBJ · Click & Drag to Orbit · Scroll to Zoom</span>
             </div>
             <div class="model-buttons">
-              <button class="hud-btn" id="btn-toggle-rotate">Pause Spin</button>
-              <button class="hud-btn" id="btn-toggle-wire">Wireframe</button>
-              <button class="hud-btn" id="btn-toggle-light">Boost Light</button>
-              <button class="hud-btn" id="btn-reset-cam">Reset View</button>
+              <button type="button" class="hud-btn" id="btn-toggle-rotate">Pause Spin</button>
+              <button type="button" class="hud-btn" id="btn-toggle-cutaway">Cutaway Slice</button>
+              <button type="button" class="hud-btn" id="btn-toggle-explode">Explode CAD</button>
+              <button type="button" class="hud-btn" id="btn-toggle-wire">Wireframe</button>
+              <button type="button" class="hud-btn" id="btn-toggle-light">Boost Light</button>
+              <button type="button" class="hud-btn" id="btn-reset-cam">Reset View</button>
+              <button type="button" class="hud-btn hud-btn-touch" id="btn-toggle-touch">3D Touch: Scroll Safe</button>
             </div>
           </div>
         </div>
@@ -367,39 +377,39 @@
           <div class="spec-grid">
             <div class="spec-card">
               <div class="spec-title">Propellant Mixture</div>
-              <div class="spec-val">Liquid H₂ & O₂<span>(Cryogenic)</span></div>
+              <div class="spec-val">Liquid H₂ &amp; O₂<span>(Cryogenic)</span></div>
             </div>
-            <div class="spec-card">
+            <div class="spec-card" tabindex="0" role="button" aria-label="Total Thrust per Engine: 164,170.14 N. Tap to replay counter.">
               <div class="spec-title">Total Thrust per Engine</div>
-              <div class="spec-val">164170.14<span>N</span></div>
+              <div class="spec-val stat-num-secondary" data-target="164170.14" data-decimals="2" data-suffix=" N">0.00<span> N</span></div>
             </div>
-            <div class="spec-card">
+            <div class="spec-card" tabindex="0" role="button" aria-label="Chamber and Nozzle Weight: 12.0 kg. Tap to replay counter.">
               <div class="spec-title">Chamber + Nozzle Weight</div>
-              <div class="spec-val">12.0<span>kg (Al Alloys)</span></div>
+              <div class="spec-val stat-num-secondary" data-target="12.0" data-decimals="1" data-suffix=" kg (Al Alloys)">0.0<span> kg (Al Alloys)</span></div>
             </div>
             <div class="spec-card">
               <div class="spec-title">Thermal Management</div>
               <div class="spec-val">Regenerative<span>Cooling Jacket</span></div>
             </div>
-            <div class="spec-card">
+            <div class="spec-card" tabindex="0" role="button" aria-label="Mission Target: 10 Ton Satellite Payload. Tap to replay counter.">
               <div class="spec-title">Mission Target</div>
-              <div class="spec-val">10 Ton<span>Satellite Payload</span></div>
+              <div class="spec-val stat-num-secondary" data-target="10" data-decimals="0" data-suffix=" Ton Payload">0<span> Ton Payload</span></div>
             </div>
-            <div class="spec-card">
+            <div class="spec-card" tabindex="0" role="button" aria-label="Clustered Configuration: 5 Engines Symmetric Ring. Tap to replay counter.">
               <div class="spec-title">Clustered Configuration</div>
-              <div class="spec-val">5 Engines<span>Symmetric Ring</span></div>
+              <div class="spec-val stat-num-secondary" data-target="5" data-decimals="0" data-suffix=" Engines Ring">0<span> Engines Ring</span></div>
             </div>
           </div>
 
-          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 1rem;">
-            <a href="assets/Jahhar-0.2 RPA assembly.obj" download class="btn-primary">
+          <div class="spotlight-actions">
+            <button type="button" class="btn-primary" id="btn-download-obj" data-download-cad="obj">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Download Jahhar-0.2 CAD (.OBJ 22.1MB)
-            </a>
-            <a href="assets/jahhar_02.glb" download class="btn-secondary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Cast Aluminum (.GLB 15.8MB)
-            </a>
+              Download Jahhar-0.2 CAD (.OBJ)
+            </button>
+            <button type="button" class="btn-secondary" id="btn-download-specs" data-download-cad="telemetry">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Export Engine Telemetry (.JSON)
+            </button>
             <a href="#rocket-cfd" class="btn-secondary">
               View Supersonic CFD Verification
             </a>
@@ -425,12 +435,12 @@
 
       <!-- Filter Bar -->
       <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all">All Disciplines</button>
-        <button class="filter-btn" data-filter="aerospace">Aerospace Propulsion</button>
-        <button class="filter-btn" data-filter="thermal">Thermal & ASME Boilers</button>
-        <button class="filter-btn" data-filter="automotive">Formula Student (ASURT)</button>
-        <button class="filter-btn" data-filter="fluids">Smart Flow Metrology</button>
-        <button class="filter-btn" data-filter="hvac">Building Services (HVAC)</button>
+        <button type="button" class="filter-btn active" data-filter="all">All Disciplines</button>
+        <button type="button" class="filter-btn" data-filter="aerospace">Aerospace Propulsion</button>
+        <button type="button" class="filter-btn" data-filter="thermal">Thermal & ASME Boilers</button>
+        <button type="button" class="filter-btn" data-filter="automotive">Formula Student (ASURT)</button>
+        <button type="button" class="filter-btn" data-filter="fluids">Smart Flow Metrology</button>
+        <button type="button" class="filter-btn" data-filter="hvac">Building Services (HVAC)</button>
       </div>
 
       <!-- ====================================================================
@@ -478,19 +488,19 @@
         </div>
 
         <!-- Interactive CFD Contour Switcher -->
-        <div data-cfd-group style="background: rgba(0, 0, 0, 0.7); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); margin: 2rem 0;">
+        <div data-cfd-group class="cfd-explorer-box">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
             <div>
               <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">Interactive CFD Field Explorer (R-0.1 Design)</h3>
               <p class="cfd-legend-info" style="color: var(--text-muted); font-size: 0.85rem;">Currently showing: Exit Velocity Contour (Peak: 3,577 m/s)</p>
             </div>
             <div class="cfd-tabs">
-              <button class="cfd-tab-btn active" data-img="assets/image17.png" data-legend="Velocity Contour 2: Supersonic acceleration reaching 3.577e+03 m/s at nozzle exit.">Velocity (3.58 km/s)</button>
-              <button class="cfd-tab-btn" data-img="assets/image22.png" data-legend="Velocity Contour 3 (Optimized Geometry): Maximum exhaust velocity 4.329e+03 m/s.">Velocity (4.33 km/s)</button>
-              <button class="cfd-tab-btn" data-img="assets/image18.png" data-legend="Static Pressure Contour 1: Chamber pressure expansion from 6.84e+05 Pa down to vacuum.">Pressure (6.84 bar)</button>
-              <button class="cfd-tab-btn" data-img="assets/image23.png" data-legend="Static Pressure Contour 1 (R-0.1 Iteration): Maximum chamber pressure 7.403e+05 Pa expanding across supersonic nozzle.">Pressure (7.40 bar)</button>
-              <button class="cfd-tab-btn" data-img="assets/image19.png" data-legend="Static Temperature Contour: Core flame gradient from 3,807 K down to 212 K at exit plane.">Temperature (3,807 K)</button>
-              <button class="cfd-tab-btn" data-img="assets/image24.png" data-legend="Static Temperature Contour (R-0.1 Iteration): Maximum combustion temperature 3,752 K.">Temperature (3,752 K)</button>
+              <button type="button" class="cfd-tab-btn active" data-img="assets/image17.png" data-legend="Velocity Contour 2: Supersonic acceleration reaching 3.577e+03 m/s at nozzle exit.">Velocity (3.58 km/s)</button>
+              <button type="button" class="cfd-tab-btn" data-img="assets/image22.png" data-legend="Velocity Contour 3 (Optimized Geometry): Maximum exhaust velocity 4.329e+03 m/s.">Velocity (4.33 km/s)</button>
+              <button type="button" class="cfd-tab-btn" data-img="assets/image18.png" data-legend="Static Pressure Contour 1: Chamber pressure expansion from 6.84e+05 Pa down to vacuum.">Pressure (6.84 bar)</button>
+              <button type="button" class="cfd-tab-btn" data-img="assets/image23.png" data-legend="Static Pressure Contour 1 (R-0.1 Iteration): Maximum chamber pressure 7.403e+05 Pa expanding across supersonic nozzle.">Pressure (7.40 bar)</button>
+              <button type="button" class="cfd-tab-btn" data-img="assets/image19.png" data-legend="Static Temperature Contour: Core flame gradient from 3,807 K down to 212 K at exit plane.">Temperature (3,807 K)</button>
+              <button type="button" class="cfd-tab-btn" data-img="assets/image24.png" data-legend="Static Temperature Contour (R-0.1 Iteration): Maximum combustion temperature 3,752 K.">Temperature (3,752 K)</button>
             </div>
           </div>
 
@@ -610,7 +620,7 @@
              MATHEMATICAL FORMULATION & FLIGHT DYNAMICS ARCHITECTURE
              (R 0.1 Presentation Slides 8, 19-25)
              =================================================================== -->
-        <div style="margin-top: 2.5rem; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.75rem;">
+        <div class="physics-formulation-box">
           <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem;">
             <div>
               <span class="section-tag" style="margin-bottom: 0.4rem; display: inline-block;">Flight Physics & Trajectory</span>
@@ -1248,7 +1258,7 @@
                   <span>mohamedelsayedaly332005@gmail.com</span>
                 </div>
               </div>
-              <button class="copy-btn" data-copy="mohamedelsayedaly332005@gmail.com">Copy</button>
+              <button type="button" class="copy-btn" data-copy="mohamedelsayedaly332005@gmail.com">Copy</button>
             </div>
 
             <div class="contact-method-card">
@@ -1261,7 +1271,7 @@
                   <span>2200166@eng.asu.edu.eg</span>
                 </div>
               </div>
-              <button class="copy-btn" data-copy="2200166@eng.asu.edu.eg">Copy</button>
+              <button type="button" class="copy-btn" data-copy="2200166@eng.asu.edu.eg">Copy</button>
             </div>
 
             <div class="contact-method-card">
@@ -1274,7 +1284,7 @@
                   <span>+20 102 551 7758 (01025517758)</span>
                 </div>
               </div>
-              <button class="copy-btn" data-copy="+201025517758">Copy</button>
+              <button type="button" class="copy-btn" data-copy="+201025517758">Copy</button>
             </div>
 
             <div class="contact-method-card">
@@ -1348,9 +1358,9 @@
        ========================================================================== -->
   <div id="lightbox-modal" class="lightbox-modal">
     <div class="lightbox-content">
-      <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
-      <button class="lightbox-nav lightbox-prev" aria-label="Previous image">&#10094;</button>
-      <button class="lightbox-nav lightbox-next" aria-label="Next image">&#10095;</button>
+      <button type="button" class="lightbox-close" aria-label="Close lightbox">&times;</button>
+      <button type="button" class="lightbox-nav lightbox-prev" aria-label="Previous image">&#10094;</button>
+      <button type="button" class="lightbox-nav lightbox-next" aria-label="Next image">&#10095;</button>
 
       <div class="lightbox-img-wrapper">
         <img src="" alt="" class="lightbox-img">

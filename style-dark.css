@@ -2130,10 +2130,17 @@ button:active {
   .contact-method-card {
     padding: 1rem 1.1rem;
     flex-wrap: wrap;
+    gap: 0.75rem;
+  }
 
-.contact-method-card .method-details {
+  .contact-method-card .method-details {
     flex: 1 1 100%;
   }
+
+  .contact-method-card .copy-btn,
+  .contact-method-card .btn-primary {
+    width: 100%;
+    justify-content: center;
   }
 
   .lightbox-modal {
@@ -2206,4 +2213,459 @@ button:active {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+
+/* ==========================================================================
+   ENHANCED COUNTING ANIMATION HUD & MOBILE + DESKTOP USABILITY OVERRIDES
+   ========================================================================== */
+
+section[id],
+.project-detail-block[id] {
+  scroll-margin-top: 84px;
+}
+
+/* Hero Stats Header & Replay Control */
+.hero-stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding-top: 1.5rem;
+  margin-bottom: 0.85rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.stats-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.stats-replay-btn {
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.74rem !important;
+  font-family: var(--font-mono) !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: var(--text-muted) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.stats-replay-btn:hover {
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+/* Redesigned Hero Stats Grid (Desktop 2x2 HUD Cards so 164,170.14 N never overflows) */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  padding-top: 0;
+  border-top: none;
+  width: 100%;
+}
+
+.stat-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.15rem;
+  min-width: 0;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-item:hover,
+.stat-item:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.38);
+  outline: none;
+}
+
+.stat-item.is-counting,
+.spec-card.is-counting {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.stat-item.counted-done,
+.spec-card.counted-done {
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.1vw, 1.85rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.22rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.stat-num span {
+  color: var(--accent-silver);
+  font-size: 0.78em;
+  font-weight: 700;
+}
+
+.stat-num-secondary {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+}
+
+.stat-label {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.spec-card[role="button"] {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Spotlight Actions & CFD / Physics Responsive Containers */
+.spotlight-actions {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.cfd-explorer-box {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  margin: 2rem 0;
+}
+
+.physics-formulation-box {
+  margin-top: 2.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  overflow: hidden;
+}
+
+/* Touch Orbit button hidden on desktop mouse pointers, visible on touch/mobile */
+.hud-btn-touch {
+  display: none !important;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .hud-btn-touch {
+    display: inline-flex !important;
+  }
+}
+
+/* Tablet Layout (<= 1024px) */
+@media (max-width: 1024px) {
+  .hero-stats-header {
+    max-width: 680px;
+  }
+
+  .hero-stats {
+    max-width: 680px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-num {
+    justify-content: center;
+  }
+
+  .hero-subtitle {
+    justify-content: center;
+  }
+
+  .hero-awards-row {
+    justify-content: center;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+  }
+}
+
+/* Mobile Tablet & Phones (<= 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.85rem 0;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .navbar.menu-open .nav-links {
+    max-height: calc(100vh - 68px);
+    overflow-y: auto;
+    z-index: 105;
+  }
+
+  .hero {
+    padding: 6.25rem 0 3.5rem 0;
+    min-height: auto;
+  }
+
+  .hero-badge {
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.35;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.78rem;
+  }
+
+  /* Show floating badges as a neat 2-card HUD strip below the portrait on mobile */
+  .portrait-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    max-width: 400px;
+  }
+
+  .floating-badge {
+    display: flex !important;
+    position: static;
+    animation: none;
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    background: rgba(20, 20, 24, 0.95);
+  }
+
+  /* Horizontal swipeable filter strip on mobile */
+  .filter-bar {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 0.25rem 0.25rem 0.65rem 0.25rem;
+    margin-bottom: 2rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Dock 3D controls cleanly below the WebGL canvas on mobile so they never block the model */
+  .model-viewer-wrapper {
+    min-height: 420px;
+    justify-content: space-between;
+  }
+
+  #three-rocket-canvas {
+    min-height: 330px;
+    flex: 1 1 auto;
+  }
+
+  .model-controls-hud {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    background: rgba(14, 14, 18, 0.98);
+    padding: 0.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .model-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .model-buttons .hud-btn-touch {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Mobile Phones (<= 576px) */
+@media (max-width: 576px) {
+  .hero-awards-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.65rem;
+  }
+
+  .award-badge-pill {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .hero-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    width: 100%;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero-buttons > :first-child {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .hero-buttons > a,
+  .hero-buttons > button {
+    width: 100%;
+    padding: 0.8rem 0.9rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .hero-stats-header {
+    padding-top: 1.15rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .stats-kicker {
+    font-size: 0.68rem;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .stat-item {
+    padding: 0.85rem 0.65rem;
+  }
+
+  .stat-num {
+    font-size: clamp(1.08rem, 4.5vw, 1.4rem);
+  }
+
+  .stat-label {
+    font-size: 0.66rem;
+    letter-spacing: 0.03em;
+  }
+
+  .portrait-img {
+    height: clamp(280px, 75vw, 370px);
+  }
+
+  .cfd-explorer-box {
+    padding: 1rem;
+  }
+
+  .cfd-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .cfd-tab-btn {
+    width: 100%;
+    padding: 0.5rem 0.5rem !important;
+    font-size: 0.74rem !important;
+    text-align: center;
+  }
+
+  .physics-formulation-box {
+    padding: 1.1rem;
+  }
+
+  .spotlight-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .spotlight-actions > a,
+  .spotlight-actions > button {
+    width: 100%;
+  }
+
+  .lightbox-img-wrapper {
+    max-height: 62vh;
+  }
+
+  .lightbox-nav {
+    top: auto;
+    bottom: -3.2rem;
+    transform: none;
+  }
+
+  .lightbox-prev {
+    left: 25%;
+  }
+
+  .lightbox-next {
+    right: 25%;
+  }
+
+  .lightbox-caption-bar {
+    margin-top: 3.6rem;
+  }
+}
+
+/* Ultra-narrow Phones (<= 350px) */
+@media (max-width: 350px) {
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .cfd-tabs {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.model-controls-hud {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.model-buttons {
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.hud-btn.active {
+  background: linear-gradient(180deg, #444452 0%, #2c2c36 100%) !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 14px rgba(255, 255, 255, 0.22) !important;
 }
