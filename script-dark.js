@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initThreeRocketViewer();
   initClipboardButtons();
   initContactForm();
+  initMobileMenu();
 });
 
 /* ==========================================================================
@@ -22,81 +23,109 @@ function initBackgroundCanvas() {
   const canvas = document.getElementById('bg-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  let width = (canvas.width = window.innerWidth);
-  let height = (canvas.height = window.innerHeight);
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+  const LINK_DIST = 130;
+  const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
 
-  window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
+  let width = 0, height = 0;
+  let particles = [];
+  let rafId = null;
 
-  const particles = [];
-  const particleCount = Math.min(Math.floor((width * height) / 16000), 75);
+  function build() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  class Particle {
-    constructor() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.45;
-      this.vy = (Math.random() - 0.5) * 0.45;
-      this.radius = Math.random() * 1.5 + 0.5;
-      this.baseAlpha = Math.random() * 0.4 + 0.2;
-    }
-
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-
-      if (this.x < 0) this.x = width;
-      if (this.x > width) this.x = 0;
-      if (this.y < 0) this.y = height;
-      if (this.y > height) this.y = 0;
-    }
-
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 255, 255, ${this.baseAlpha})`;
-      ctx.fill();
+    // Area-based density, capped lower on phones (a 360x800 screen only needs ~11)
+    const density = isMobile ? 26000 : 16000;
+    const count = Math.min(Math.floor((width * height) / density), isMobile ? 40 : 75);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        radius: Math.random() * 1.5 + 0.5,
+        baseAlpha: Math.random() * 0.4 + 0.2
+      });
     }
   }
 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
-  }
-
-  function animate() {
+  function step() {
     ctx.clearRect(0, 0, width, height);
 
-    // Draw connecting lines
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+    const n = particles.length;
+    for (let i = 0; i < n; i++) {
+      const a = particles[i];
+      a.x += a.vx;
+      a.y += a.vy;
+      if (a.x < 0) a.x = width;
+      else if (a.x > width) a.x = 0;
+      if (a.y < 0) a.y = height;
+      else if (a.y > height) a.y = 0;
+    }
 
-        if (dist < 130) {
-          const alpha = (1 - dist / 130) * 0.15;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
+    // Lines: cheap bounding-box reject first, sqrt only for surviving pairs
+    ctx.lineWidth = 0.75;
+    for (let i = 0; i < n; i++) {
+      const a = particles[i];
+      for (let j = i + 1; j < n; j++) {
+        const b = particles[j];
+        const dx = a.x - b.x;
+        if (dx > LINK_DIST || dx < -LINK_DIST) continue;
+        const dy = a.y - b.y;
+        if (dy > LINK_DIST || dy < -LINK_DIST) continue;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < LINK_DIST_SQ) {
+          const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.15;
           ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-          ctx.lineWidth = 0.75;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
           ctx.stroke();
         }
       }
     }
 
-    particles.forEach((p) => {
-      p.update();
-      p.draw();
-    });
+    for (let i = 0; i < n; i++) {
+      const p = particles[i];
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${p.baseAlpha})`;
+      ctx.fill();
+    }
 
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(step);
   }
 
-  animate();
+  build();
+
+  // Debounced rebuild so the mobile URL-bar collapse doesn't respawn particles per frame
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(build, 150);
+  });
+
+  // Pause rendering when the tab is hidden (battery/CPU)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+    } else {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(step);
+    }
+  });
+
+  rafId = requestAnimationFrame(step);
 }
 
 /* ==========================================================================
@@ -106,76 +135,84 @@ function initNavbarScroll() {
   const navbar = document.querySelector('.navbar');
   const navLinks = document.querySelectorAll('.nav-link');
   const sections = document.querySelectorAll('section[id]');
+  if (!navbar) return;
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
+  // Measure section geometry once and refresh on resize, NOT on every scroll event
+  let offsets = [];
+  function measure() {
+    offsets = Array.from(sections).map((section) => ({
+      id: section.getAttribute('id'),
+      top: section.offsetTop - 120,
+      height: section.offsetHeight
+    }));
+  }
+  measure();
 
-    let current = '';
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop - 120;
-      const sectionHeight = section.offsetHeight;
-      if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-        current = section.getAttribute('id');
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      navbar.classList.toggle('scrolled', y > 40);
+
+      let current = '';
+      for (let i = 0; i < offsets.length; i++) {
+        const o = offsets[i];
+        if (y >= o.top && y < o.top + o.height) {
+          current = o.id;
+          break;
+        }
       }
-    });
 
-    navLinks.forEach((link) => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === `#${current}`) {
-        link.classList.add('active');
-      }
+      navLinks.forEach((link) => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
+
+      ticking = false;
     });
-  });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', measure);
 }
 
 /* ==========================================================================
    3. ANIMATED METRIC COUNTERS
    ========================================================================== */
 function initStatsCounters() {
-  const counters = document.querySelectorAll('.stat-num[data-target]');
+  const counters = Array.from(document.querySelectorAll('.stat-num[data-target]'));
   if (!counters.length) return;
 
-  const observer = new IntersectionObserver(
-    (entries, obs) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const counter = entry.target;
-          const target = parseFloat(counter.getAttribute('data-target'));
-          const suffix = counter.getAttribute('data-suffix') || '';
-          const prefix = counter.getAttribute('data-prefix') || '';
-          const decimals = parseInt(counter.getAttribute('data-decimals') || '0', 10);
-          const duration = 1800;
-          const start = performance.now();
+  // Count up as the page opens on every device, phone included: these numbers
+  // sit below the fold on small screens, where a scroll-triggered start left
+  // them showing 0.
+  counters.forEach((counter) => {
+    const target = parseFloat(counter.getAttribute('data-target'));
+    const suffix = counter.getAttribute('data-suffix') || '';
+    const prefix = counter.getAttribute('data-prefix') || '';
+    const decimals = parseInt(counter.getAttribute('data-decimals') || '0', 10);
+    const duration = 1800;
+    const start = performance.now();
 
-          function updateCounter(time) {
-            const progress = Math.min((time - start) / duration, 1);
-            // easeOutExpo
-            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-            const currentVal = target * ease;
+    function updateCounter(time) {
+      const progress = Math.min((time - start) / duration, 1);
+      // easeOutExpo
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const currentVal = target * ease;
 
-            counter.innerHTML = `${prefix}${currentVal.toLocaleString('en-US', {
-              minimumFractionDigits: decimals,
-              maximumFractionDigits: decimals,
-            })}<span>${suffix}</span>`;
+      counter.innerHTML = prefix + currentVal.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      }) + '<span>' + suffix + '</span>';
 
-            if (progress < 1) {
-              requestAnimationFrame(updateCounter);
-            }
-          }
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      }
+    }
 
-          requestAnimationFrame(updateCounter);
-          obs.unobserve(counter);
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
-
-  counters.forEach((c) => observer.observe(c));
+    requestAnimationFrame(updateCounter);
+  });
 }
 
 /* ==========================================================================
@@ -367,7 +404,7 @@ async function initThreeRocketViewer() {
     powerPreference: 'high-performance'
   });
   renderer.setSize(w, h);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.matchMedia('(max-width: 768px)').matches ? 1.5 : 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.4;
 
@@ -377,6 +414,9 @@ async function initThreeRocketViewer() {
   controls.dampingFactor = 0.06;
   controls.autoRotate = true;
   controls.autoRotateSpeed = 1.6;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    controls.autoRotate = false;
+  }
   controls.minDistance = 1.2;
   controls.maxDistance = 12;
   controls.target.set(0, 0, 0);
@@ -535,9 +575,17 @@ async function initThreeRocketViewer() {
   }
   window.addEventListener('resize', onWindowResize);
 
-  // Render Loop
+  // Render Loop: only draw while the viewer is on screen (big battery/CPU win on phones)
+  let viewerVisible = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      viewerVisible = entries[0].isIntersecting;
+    }, { threshold: 0.05 }).observe(container);
+  }
+
   function animate() {
     requestAnimationFrame(animate);
+    if (!viewerVisible) return;
     controls.update();
     renderer.render(scene, camera);
   }
@@ -644,5 +692,28 @@ function initContactForm() {
     const name = document.getElementById('form-name').value;
     showToast(`Thank you, ${name || 'colleague'}! Message prepared for Mohamed.`);
     form.reset();
+  });
+}
+
+
+/* ==========================================================================
+   10. MOBILE NAVIGATION MENU (hamburger toggle)
+   ========================================================================== */
+function initMobileMenu() {
+  const toggle = document.getElementById('mobile-toggle');
+  const navbar = document.querySelector('.navbar');
+  if (!toggle || !navbar) return;
+
+  toggle.addEventListener('click', () => {
+    const open = navbar.classList.toggle('menu-open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // Close the panel after tapping any link
+  navbar.querySelectorAll('.nav-links a, .nav-actions a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navbar.classList.remove('menu-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
   });
 }

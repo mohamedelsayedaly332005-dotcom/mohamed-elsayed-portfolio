@@ -1203,16 +1203,7 @@ model-viewer {
   gap: 1.25rem;
 }
 
-.contact-method-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-}
+
 
 .contact-method-card:hover {
   background: rgba(255, 255, 255, 0.06);
@@ -1268,6 +1259,34 @@ model-viewer {
   background: var(--accent-cyan);
   color: #000000;
   border-color: var(--accent-cyan);
+}
+
+.contact-left, .contact-right {
+  min-width: 0;
+}
+
+.contact-method-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  min-width: 0;
+}
+
+.method-details, .method-text {
+  min-width: 0;
+}
+
+.method-icon, .copy-btn {
+  flex-shrink: 0;
+}
+
+.method-text span, .method-text a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* Contact Form */
@@ -1524,7 +1543,7 @@ footer {
   }
 
   .contact-box {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding: 2.5rem;
   }
 
@@ -1533,6 +1552,12 @@ footer {
 }
 
 @media (max-width: 768px) {
+
+.cfd-tabs {
+  flex-wrap: wrap;
+  width: 100%;
+}
+
   .nav-links, .nav-actions {
     display: none;
   }
@@ -1870,4 +1895,315 @@ button:active {
 /* Enhanced framing for complete manufactured chassis frame */
 .chassis-frame-img {
   object-position: 25% 40% !important;
+}
+
+/* ==========================================================================
+   MOBILE-OPTIMIZED RESPONSIVE PASS + ANIMATION SMOOTHNESS
+   ========================================================================== */
+
+/* Hamburger toggle: hidden on desktop, framed button on phones */
+.mobile-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  padding: 0 !important;
+}
+
+.nav-mobile-cta {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Solid navbar on phones: backdrop-filter over scrolling content causes jank */
+  .navbar.scrolled,
+  .navbar.menu-open {
+    background: rgba(0, 0, 0, 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .navbar.menu-open {
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .mobile-toggle {
+    display: inline-flex;
+  }
+
+  /* Slide-down navigation panel */
+  .navbar.menu-open .nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.97);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-lg);
+    padding: 0.75rem 1.5rem 1.5rem;
+  }
+
+  .navbar.menu-open .nav-link {
+    display: block;
+    padding: 0.9rem 0;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .navbar.menu-open .nav-link::after {
+    display: none;
+  }
+
+  .navbar.menu-open .nav-mobile-cta {
+    display: block;
+    margin-top: 1.25rem;
+  }
+
+  .navbar.menu-open .nav-mobile-cta .btn-primary {
+    width: 100%;
+    padding: 0.9rem 1.5rem !important;
+  }
+
+  /* Fixed background attachment repaints on every scroll on mobile browsers */
+  body {
+    background-attachment: scroll;
+  }
+}
+
+/* --- PHONES (<=576px) --- */
+@media (max-width: 576px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.7rem, 6vw, 2.2rem);
+  }
+
+  .section-desc {
+    font-size: 0.95rem;
+  }
+
+  .hero {
+    padding: 7.5rem 0 3.5rem 0;
+  }
+
+  /* Stable mobile viewport height (ignores collapsing URL bar) */
+  @supports (min-height: 100svh) {
+    .hero {
+      min-height: 100svh;
+    }
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 8.5vw, 2.6rem);
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .hero-bio {
+    font-size: 0.95rem;
+  }
+
+  .hero-buttons {
+    gap: 0.9rem;
+    justify-content: center;
+  }
+
+  .hero-stats {
+    gap: 1rem 0.75rem;
+    padding-top: 1.5rem;
+  }
+
+  .stat-num {
+    font-size: 1.6rem;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+  }
+
+  .portrait-img {
+    height: 440px;
+  }
+
+  .spotlight-info {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .model-viewer-wrapper {
+    min-height: 380px;
+  }
+
+  /* The hint text steals space; rotate/zoom gestures are self-evident on touch */
+  .model-hint {
+    display: none;
+  }
+
+  .model-controls-hud {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .model-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hud-btn {
+    padding: 0.45rem 0.7rem !important;
+    font-size: 0.72rem !important;
+  }
+
+  .spec-grid {
+    gap: 0.9rem;
+  }
+
+  .spec-card .spec-val {
+    font-size: 1.15rem;
+  }
+
+  .gallery-grid {
+    gap: 1.1rem;
+  }
+
+  .gallery-item-img {
+    height: 180px;
+  }
+
+  .project-detail-block {
+    padding: 1.75rem 1.1rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .project-main-info h2 {
+    font-size: 1.6rem;
+  }
+
+  /* CFD tabs wrap into rows instead of overflowing the screen */
+  .cfd-tabs {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .cfd-tab-btn {
+    padding: 0.5rem 0.85rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .tech-bullet-list {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-section,
+  .projects-section,
+  .skills-section,
+  .spotlight-section {
+    padding: 4rem 0;
+  }
+
+  .contact-section {
+    padding: 4rem 0 3rem 0;
+  }
+
+  .contact-box {
+    padding: 1.75rem 1.25rem;
+    gap: 2.5rem;
+  }
+
+  .contact-left h2 {
+    font-size: 1.9rem;
+  }
+
+  .contact-method-card {
+    padding: 1rem 1.1rem;
+    flex-wrap: wrap;
+
+.contact-method-card .method-details {
+    flex: 1 1 100%;
+  }
+  }
+
+  .lightbox-modal {
+    padding: 1rem;
+  }
+
+  .lightbox-close {
+    top: 0.25rem;
+    right: 0.25rem;
+  }
+
+  .lightbox-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .toast {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* --- TOUCH DEVICES: no hover-lift (prevents sticky-hover jank on tap) --- */
+@media (hover: none) {
+  .timeline-card:hover,
+  .gallery-item:hover,
+  .skill-card:hover,
+  .portrait-wrapper:hover,
+  .contact-method-card:hover,
+  .award-badge-pill:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .hud-btn:hover,
+  .filter-btn:hover,
+  .cfd-tab-btn:hover,
+  .copy-btn:hover,
+  .form-submit-btn:hover,
+  button:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .gallery-item:hover .gallery-item-img,
+  .portrait-wrapper:hover .portrait-img {
+    transform: none !important;
+  }
+
+  .zoom-overlay {
+    display: none;
+  }
+}
+
+/* --- REDUCED MOTION: respect the OS accessibility setting --- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
