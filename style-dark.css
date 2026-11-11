@@ -488,7 +488,7 @@ button {
   width: 100%;
   height: 520px;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 15%;
   filter: contrast(1.05) brightness(1.02);
   transition: transform var(--transition-slow);
 }
